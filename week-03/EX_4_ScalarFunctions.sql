@@ -36,7 +36,7 @@ SELECT title,
        SUBSTRING(title, 1, 3)  AS first_three,
        LOWER(title)            AS lower_title,
        REPLACE(title, ' ', '_') AS file_name,
-       REVERSE(title)          AS backwards
+       REVERSE(title)          AS backwards	
 FROM film
 LIMIT 10;
 
@@ -50,4 +50,34 @@ SELECT first_name,
               LOWER(SUBSTRING(first_name, 2))) AS proper_first
 FROM customer
 LIMIT 10;
+
+SELECT rental_id,
+       rental_date,
+       DATE(rental_date)      AS rental_day,
+       DAYNAME(rental_date)   AS weekday,
+       DAYOFWEEK(rental_date) AS weekday_number,
+       DAYOFYEAR(rental_date) AS day_of_year,
+       QUARTER(rental_date)   AS quarter
+FROM rental
+LIMIT 10;
+
+SELECT r.rental_id,
+       r.rental_date,
+       r.return_date,
+       DATEDIFF(r.return_date, r.rental_date) AS days_kept,
+       f.rental_duration,
+       DATE_ADD(r.rental_date, INTERVAL f.rental_duration DAY) AS due_date
+FROM rental r
+JOIN inventory i ON i.inventory_id = r.inventory_id
+JOIN film f ON f.film_id = i.film_id
+LIMIT 10;
+SELECT payment_id,
+       payment_date,
+       DATE_FORMAT(payment_date, '%M %d, %Y')         AS report_date,
+       DATE_FORMAT(payment_date, '%m/%d/%Y %h:%i %p') AS us_format,
+       DATE_SUB(payment_date, INTERVAL 1 MONTH)       AS one_month_earlier
+FROM payment
+LIMIT 10;
+
+SELECT CURDATE(), CURTIME(), CURRENT_TIMESTAMP;
 
